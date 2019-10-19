@@ -530,7 +530,7 @@ t.test('assertions and weird stuff', t => {
     },
 
     'using the assertAt field': tt => {
-      const stack = require('../lib/stack.js')
+      const stack = require('../lib/stack.js').instance
       const foo = () => tt.fail('expect fail')
       const bar = () => foo()
       const baz = () => { tt.assertAt = stack.at(); bar() }
@@ -540,7 +540,7 @@ t.test('assertions and weird stuff', t => {
     },
 
     'using the assertStack field': tt => {
-      const stack = require('../lib/stack.js')
+      const stack = require('../lib/stack.js').instance
       const foo = () => tt.fail('expect fail')
       const bar = () => foo()
       const baz = () => { tt.assertStack = stack.captureString(80); bar() }

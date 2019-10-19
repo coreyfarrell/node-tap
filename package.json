@@ -4,56 +4,36 @@
   "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me)",
   "description": "A Test-Anything-Protocol library for JavaScript",
   "homepage": "http://www.node-tap.org/",
-  "bin": {
-    "tap": "bin/run.js"
-  },
   "main": "lib/tap.js",
   "engines": {
     "node": ">=8"
   },
   "dependencies": {
-    "async-hook-domain": "^1.1.3",
+    "async-hook-domain": "file:/usr/src/npm/async-hook-domain/async-hook-domain-1.1.3.tgz",
     "bind-obj-methods": "^2.0.0",
     "browser-process-hrtime": "^1.0.0",
-    "chokidar": "^3.3.0",
-    "color-support": "^1.1.0",
-    "coveralls": "^3.0.8",
     "diff": "^4.0.1",
-    "esm": "^3.2.25",
-    "findit": "^2.0.0",
-    "flow-remove-types": "^2.112.0",
-    "foreground-child": "^1.3.3",
-    "fs-exists-cached": "^1.0.0",
     "function-loop": "^1.0.2",
-    "glob": "^7.1.6",
-    "import-jsx": "^3.0.0",
-    "ink": "^2.5.0",
-    "isexe": "^2.0.0",
-    "istanbul-lib-processinfo": "^1.0.0",
-    "jackspeak": "^1.4.0",
     "minipass": "^3.1.1",
-    "mkdirp": "^0.5.1",
-    "nyc": "^14.1.1",
-    "opener": "^1.5.1",
+    "make-dir": "^3.0.0",
     "own-or": "^1.0.0",
     "own-or-env": "^1.0.1",
-    "react": "^16.12.0",
-    "rimraf": "^2.7.1",
-    "signal-exit": "^3.0.0",
-    "source-map-support": "^0.5.16",
+    "rimraf": "^3.0.0",
+    "signal-exit": "^3.0.2",
     "stack-utils": "^1.0.2",
-    "tap-mocha-reporter": "^5.0.0",
     "tap-parser": "^10.0.1",
     "tap-yaml": "^1.0.0",
     "tcompare": "^3.0.0",
-    "treport": "^1.0.0",
     "trivial-deferred": "^1.0.1",
-    "ts-node": "^8.5.2",
-    "typescript": "^3.7.2",
-    "which": "^2.0.2",
     "write-file-atomic": "^3.0.1",
-    "yaml": "^1.7.2",
     "yapool": "^1.0.0"
+  },
+  "devDependencies": {
+    "foreground-child": "^2.0.0",
+    "glob": "^7.1.6",
+    "nyc": "^15.0.0-beta.0",
+    "source-map-support": "^0.5.16",
+    "tap-mocha-reporter": "^5.0.0"
   },
   "keywords": [
     "assert",
@@ -64,42 +44,11 @@
   "license": "ISC",
   "repository": "https://github.com/tapjs/node-tap.git",
   "scripts": {
-    "snap": "bash scripts/snap.sh",
-    "test": "node bin/run.js test -M coverage-map.js",
-    "unit": "bash scripts/unit.sh",
-    "posttest": "rm -rf cli-tests-*",
-    "postunit": "npm run posttest",
-    "t": "node bin/run.js test -J -sfails.txt",
-    "preversion": "npm test",
-    "postversion": "npm publish",
-    "postpublish": "bash postpublish.sh",
-    "www:build": "cd docs; npm ci; npm run build",
-    "www:develop": "cd docs; npm run develop",
-    "start": "npm run www:develop",
-    "www:serve": "cd docs; npm run serve"
-  },
-  "tap": {
-    "esm": false,
-    "test-ignore": "/(^|/)cli-tests-[0-9]+/",
-    "check-coverage": true
-  },
-  "nyc": {
-    "include": [
-      "bin/run.js",
-      "bin/jsx.js",
-      "lib/*.js",
-      "bin/jack.js"
-    ]
+    "test": "nyc --silent=true node run-tests.js | tap-mocha-reporter classic",
+    "posttest": "nyc report"
   },
   "files": [
-    "bin/run.js",
-    "bin/jsx.js",
-    "bin/jack.js",
     "lib/*.js"
-  ],
-  "bundleDependencies": [
-    "ink",
-    "treport"
   ],
   "funding": {
     "url": "https://github.com/sponsors/isaacs"

@@ -2,14 +2,14 @@
 const t = require('../')
 const Snapshot = require('../lib/snapshot.js')
 const rimraf = require('rimraf')
-const mkdirp = require('mkdirp')
+const makeDir = require('make-dir')
 const path = require('path')
 const dir = path.resolve(__dirname, 'snapshot')
 const fs = require('fs')
 
 t.test('cleanup first', t => {
   rimraf.sync(dir)
-  mkdirp.sync(dir)
+  makeDir.sync(dir)
   process.chdir(dir)
   t.end()
 })
