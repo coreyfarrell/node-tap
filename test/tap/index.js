@@ -1,10 +1,46 @@
 'use strict'
 const node = process.execPath
 
+function setupShortStack() {
+  const path = require('path')
+  const StackUtils = require('stack-utils')
+  const sourceMapSupport = require('source-map-support')
+
+  // This is still used within clean-yaml-object.js
+  process.env.TAP_DEV_SHORTSTACK = '1';
+
+  const tapDir = path.resolve(__dirname, '..', '..')
+  const resc = str =>
+    str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+
+  const skip = [
+    /at internal\/.*\.js:\d+:\d+/m,
+    new RegExp(resc(tapDir) + '\\b', 'i'),
+    new RegExp('at ' + resc('Generator.next (<anonymous>)'), 'i'),
+    new RegExp(resc(require.resolve('function-loop'))),
+    new RegExp(resc(require.resolve('nyc').replace(/(node_modules[\/\\]nyc).*$/, '$1'))),
+  ]
+
+  let nodeInternals = []
+  try {
+    nodeInternals = StackUtils.nodeInternals()
+  } catch (error) {
+    // Do nothing.
+  }
+
+  sourceMapSupport.install({environment:'node', hookRequire: true})
+
+  // Loading lib/tap.js here would interfere with some tests that set the environment
+  require('../../lib/stack').instance = new StackUtils({
+    internals: nodeInternals.concat(skip),
+    wrapCallSite: sourceMapSupport.wrapCallSite
+  })
+}
+
 if (module === require.main)
   require('../../lib/tap.js').pass('just the index')
 
-process.env.TAP_DEV_SHORTSTACK = '1'
+setupShortStack()
 
 module.exports = (...test) => {
   if (process.argv[2] === 'runtest') {

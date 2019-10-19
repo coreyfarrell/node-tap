@@ -3,13 +3,21 @@ const path = require('path')
 module.exports = t => {
   const parts = path.relative(process.cwd(), path.resolve(t)).split(/\\|\//)
   const unit = path.basename(parts[1], '.js')
-  if (unit === 'run')
-    return glob.sync('bin/*.js')
-  if (unit === 'coverage-map')
+  if (unit === 'coverage-map') {
     return [ path.basename(__filename) ]
+  }
+
+  if (unit === 'stack') {
+    return [
+      'lib/stack.js',
+      'lib/tap.js'
+    ]
+  }
+
   const cov = glob.sync(`lib/${unit}.js`)
-  if (!cov.length)
+  if (!cov.length) {
     return null
+  }
   return cov
 }
 

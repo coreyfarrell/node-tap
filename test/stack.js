@@ -1,45 +1,33 @@
 'use strict'
-const t = require('../')
-const path = require('path')
+const tap = require('../')
+const stack = require('../lib/stack.js')
 
-t.test('in tapdir, no envs', t => {
-  delete require.cache[require.resolve('../lib/stack.js')]
-  process.chdir(path.resolve(__dirname, '..'))
-  process.env.TAP_DEV_LONGSTACK = 0
-  process.env.TAP_DEV_SHORTSTACK = 0
-  const stack = require('../lib/stack.js').captureString()
-  t.match(stack, /test[\/\\]stack\.js:\w+:\w+\)\n/)
-  t.notMatch(stack, '\.node-spawn-wrap')
-  t.end()
+// This construct ensures the stack traces are identical except for filtering
+const [defaultLoadStack, minitapLoadStack] = [stack.StackUtils, tap.stackUtils].map(
+  i => i.captureString().split('\n')
+)
+
+tap.test('stack-utils', async t => {
+  const isInternal = f => (/internal\//.test(f))
+  const notInternal = f => !isInternal(f)
+
+  t.ok(defaultLoadStack.filter(isInternal).length > 1)
+  t.ok(minitapLoadStack.filter(isInternal).length <= 1)
+  t.same(
+    defaultLoadStack.filter(notInternal),
+    minitapLoadStack.filter(notInternal)
+  )
 })
 
-t.test('in ~, no envs', t => {
-  delete require.cache[require.resolve('../lib/stack.js')]
-  process.chdir(process.env.HOME)
-  process.env.TAP_DEV_LONGSTACK = 0
-  process.env.TAP_DEV_SHORTSTACK = 0
-  const stack = require('../lib/stack.js').captureString()
-  t.equal(stack, '')
-  t.end()
-})
+tap.test('t.stackUtils', async t => {
+  t.is(stack.instance, tap.stackUtils)
 
-t.test('in home, longstack', t => {
-  delete require.cache[require.resolve('../lib/stack.js')]
-  process.chdir(process.env.HOME)
-  process.env.TAP_DEV_LONGSTACK = 1
-  process.env.TAP_DEV_SHORTSTACK = 0
-  const stack = require('../lib/stack.js').captureString()
-  t.match(stack, /test[\/\\]stack\.js:\w+:\w+\)\n/)
-  t.notMatch(stack, '\.node-spawn-wrap')
-  t.end()
-})
+  const {instance} = stack
+  tap.stackUtils = null
+  t.is(stack.instance, null)
+  t.is(stack.instance, tap.stackUtils)
 
-t.test('in tapdir, shortstack', t => {
-  delete require.cache[require.resolve('../lib/stack.js')]
-  process.chdir(path.resolve(__dirname, '..'))
-  process.env.TAP_DEV_LONGSTACK = 0
-  process.env.TAP_DEV_SHORTSTACK = 1
-  const stack = require('../lib/stack.js').captureString()
-  t.equal(stack, '')
-  t.end()
+  tap.stackUtils = instance
+  t.is(stack.instance, tap.stackUtils)
+  t.is(stack.instance, instance)
 })
