@@ -1,15 +1,15 @@
-# minitap
+# libtap
 
 A <abbr title="Test Anything Protocol">TAP</abbr> test framework for
 Node.js.
 
-## `minitap` vs `tap`
+## `libtap` vs `tap`
 
 `tap` extends this module and provides many other nice features.  Generally
-you should be using `require('tap')` instead of `require('minitap')`.  In some
-edge cases it can be appropriate to use `minitap` directly.
+you should be using `require('tap')` instead of `require('libtap')`.  In some
+edge cases it can be appropriate to use `libtap` directly.
 
-* Install size is important - `minitap` has significantly less dependencies.
+* Install size is important - `libtap` has significantly less dependencies.
 * Your tests are suspectable to transformations or other environmental changes.
   `tap` does things that are useful by default, if this causes problems for your
   code you may wish to go lower level.
@@ -24,7 +24,7 @@ edge cases it can be appropriate to use `minitap` directly.
 
 These all have an effect on the environment and may be undesirable in some edge cases.
 Should any/all of these be opt-out or even opt-in?  The goal is to be able to create
-functional tests using `require('minitap')`.
+functional tests using `require('libtap')`.
 
 ## Further thoughts
 

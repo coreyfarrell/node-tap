@@ -3,7 +3,7 @@ const tap = require('../')
 const stack = require('../lib/stack.js')
 
 // This construct ensures the stack traces are identical except for filtering
-const [defaultLoadStack, minitapLoadStack] = [stack.StackUtils, tap.stackUtils].map(
+const [defaultLoadStack, libtapLoadStack] = [stack.StackUtils, tap.stackUtils].map(
   i => i.captureString().split('\n')
 )
 
@@ -12,10 +12,10 @@ tap.test('stack-utils', async t => {
   const notInternal = f => !isInternal(f)
 
   t.ok(defaultLoadStack.filter(isInternal).length > 1)
-  t.ok(minitapLoadStack.filter(isInternal).length <= 1)
+  t.ok(libtapLoadStack.filter(isInternal).length <= 1)
   t.same(
     defaultLoadStack.filter(notInternal),
-    minitapLoadStack.filter(notInternal)
+    libtapLoadStack.filter(notInternal)
   )
 })
 
