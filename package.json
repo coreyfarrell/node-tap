@@ -33,7 +33,7 @@
     "glob": "^7.1.6",
     "nyc": "git://github.com/istanbuljs/nyc#master",
     "source-map-support": "^0.5.16",
-    "tap-mocha-reporter": "^5.0.0"
+    "tap-yaml-summary": "git://github.com/cfware/tap-yaml-summary#master"
   },
   "keywords": [
     "assert",
@@ -44,7 +44,7 @@
   "license": "ISC",
   "repository": "https://github.com/tapjs/node-tap.git",
   "scripts": {
-    "test": "nyc --silent=true node run-tests.js | tap-mocha-reporter classic",
+    "test": "nyc --silent=true node run-tests.js | tap-yaml-summary",
     "posttest": "nyc report"
   },
   "files": [
